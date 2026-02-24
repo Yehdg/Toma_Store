@@ -1,0 +1,2 @@
+"use strict";(self["webpackChunkfrontend"]=self["webpackChunkfrontend"]||[]).push([[620],{1620:function(e,n,t){t.r(n),t.d(n,{default:function(){return a}});var r=function(){var e=this;e._self._c;return e._m(0)},u=[function(){var e=this,n=e._self._c;return n("div",{staticClass:"welcome"},[n("h2",[e._v("會員中心")]),n("p",[e._v("歡迎來到會員中心！在左邊導覽列，您可以查看和管理您的個人資料及購買紀錄。")])])}],c={name:"MemberWelcome"},s=c,f=t(1656),l=(0,f.A)(s,r,u,!1,null,"1511cd4f",null),a=l.exports}}]);
+//# sourceMappingURL=620.66c2a7eb.js.map
