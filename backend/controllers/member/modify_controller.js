@@ -86,7 +86,7 @@ module.exports = class Member {
         process.env.JWT_SECRET
       );
 
-      // 🔥 改用 httpOnly Cookie（更安全）
+      // 用 httpOnly Cookie（更安全）
       res.cookie('auth-token', token, {
         httpOnly: true,     // JavaScript 無法讀取
         secure: false,      // 本地開發用 false，正式環境改 true
