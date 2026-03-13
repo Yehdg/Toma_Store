@@ -47,7 +47,7 @@ export default {
         
         // 呼叫後端 API
         // const response = await this.axios.get('http://localhost:3000/api/products');
-        const response = await this.axios.get('https://two026toma-store.onrender.com/api/products');
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/api/products');
         this.products = response.data.products || [];
         
         console.log('商品資料:', this.products);
@@ -71,7 +71,7 @@ export default {
       try {
         // 發送驗證請求
         // const response = await this.axios.get('http://localhost:3000/member/verify', {
-        const response = await this.axios.get('https://two026toma-store.onrender.com/member/verify', {
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/member/verify', {
           withCredentials: true
         });
         

@@ -9,7 +9,7 @@ module.exports = class Product{
             if (result.products && result.products.length > 0) {
                 result.products = result.products.map(product => ({
                     ...product,
-                    image_url: `http://localhost:3000${product.imgPath}`
+                    image_url: `${process.env.BACKEND_URL || 'http://localhost:3000'}${product.imgPath}`
                 }));
             }
             

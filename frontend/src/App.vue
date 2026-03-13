@@ -76,7 +76,7 @@ export default {
     async logout() {
       try {
         // await this.axios.post('http://localhost:3000/member/logout', {}, {
-        await this.axios.post('https://two026toma-store.onrender.com/member/logout', {}, {
+        await this.axios.post('https://tomastore-production.up.railway.app/member/logout', {}, {
           withCredentials: true
         });
       } catch (error) {
@@ -114,7 +114,7 @@ export default {
     async verifyLoginStatus() {
       try {
         //const response = await this.axios.get('http://localhost:3000/member/verify', {
-        const response = await this.axios.get('https://two026toma-store.onrender.com/member/verify', {
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/member/verify', {
           withCredentials: true
         });
         

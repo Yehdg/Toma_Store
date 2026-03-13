@@ -90,7 +90,7 @@ export default {
     async getMemberId() {
       try {
         // const response = await this.axios.get('http://localhost:3000/member/verify', {
-        const response = await this.axios.get('https://two026toma-store.onrender.com/member/verify', {
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/member/verify', {
           withCredentials: true
         });
         
@@ -109,7 +109,7 @@ export default {
         
         // 先獲取所有商品資料
         // const response = await this.axios.get('http://localhost:3000/api/products', {
-        const response = await this.axios.get('https://two026toma-store.onrender.com/api/products', {
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/api/products', {
           withCredentials: true
         });
         
@@ -213,7 +213,7 @@ export default {
         }
 
         // const response = await this.axios.post('http://localhost:3000/api/orders', {
-        const response = await this.axios.post('https://two026toma-store.onrender.com/api/orders', {
+        const response = await this.axios.post('https://tomastore-production.up.railway.app/api/orders', {
           productID: this.products.map(p => p.id).join(','),        
           quantity: this.products.map(p => p.cartQuantity).join(',') 
         }, {

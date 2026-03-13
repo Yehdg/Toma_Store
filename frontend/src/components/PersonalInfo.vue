@@ -94,7 +94,7 @@ export default {
       try {
         // 🔥 調用後端 API 獲取會員資料
         // const response = await this.axios.get('http://localhost:3000/member');
-        const response = await this.axios.get('https://two026toma-store.onrender.com/member');
+        const response = await this.axios.get('https://tomastore-production.up.railway.app/member');
         
         if (response.data.result.status === '取得資料成功。') {
           const memberData = response.data.result.member;
@@ -106,7 +106,7 @@ export default {
             phone: memberData.phone || '尚未設定',  // 如果沒有電話資料
             createDate: memberData.createDate,
             // picture: memberData.img ? `http://localhost:3000${memberData.img}` : null
-            picture: memberData.img ? `https://two026toma-store.onrender.com${memberData.img}` : null
+            picture: memberData.img ? `https://tomastore-production.up.railway.app${memberData.img}` : null
           };
           
           console.log('用戶資料載入成功:', this.userInfo);
@@ -162,7 +162,7 @@ export default {
       try {
         // 1. 先更新基本資料
         // const response = await this.axios.put('http://localhost:3000/member/update', {
-        const response = await this.axios.put('https://two026toma-store.onrender.com/member/update', {
+        const response = await this.axios.put('https://tomastore-production.up.railway.app/member/update', {
           name: this.userInfo.name,
           phone: this.userInfo.phone
         }, {
@@ -179,7 +179,7 @@ export default {
           formData.append('avatar', this.selectedFile);
           
           // const avatarResponse = await this.axios.post('http://localhost:3000/member/update-avatar', formData, {
-          const avatarResponse = await this.axios.post('https://two026toma-store.onrender.com/member/update-avatar', formData, {
+          const avatarResponse = await this.axios.post('https://tomastore-production.up.railway.app/member/update-avatar', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             },
@@ -189,7 +189,7 @@ export default {
           if (avatarResponse.data.result.status === '頭像上傳成功。') {
             // 更新頭像為伺服器路徑
             // this.userInfo.picture = `http://localhost:3000${avatarResponse.data.result.avatarURL}`;
-            this.userInfo.picture = `https://two026toma-store.onrender.com${avatarResponse.data.result.avatarURL}`;
+            this.userInfo.picture = `https://tomastore-production.up.railway.app${avatarResponse.data.result.avatarURL}`;
             this.selectedFile = null; // 清除選中的檔案
           } else {
             throw new Error(avatarResponse.data.result.err || '頭像上傳失敗');

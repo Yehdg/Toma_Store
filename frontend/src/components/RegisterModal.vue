@@ -75,7 +75,7 @@ export default {
                     password: this.password
                 });
                 // const response = await this.axios.post('http://localhost:3000/member/register', {
-                const response = await this.axios.post('https://two026toma-store.onrender.com/member/register', {
+                const response = await this.axios.post('https://tomastore-production.up.railway.app/member/register', {
                     name: this.name,
                     email: this.email,
                     password: this.password

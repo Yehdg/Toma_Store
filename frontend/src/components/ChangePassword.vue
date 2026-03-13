@@ -64,7 +64,7 @@ export default {
             this.loading = true;
             try {
                 // const response = await this.axios.put('http://localhost:3000/member/update-password', {
-                const response = await this.axios.put('https://two026toma-store.onrender.com/member/update-password', {
+                const response = await this.axios.put('https://tomastore-production.up.railway.app/member/update-password', {
                     oldPassword: this.oldPassword,
                     newPassword: this.newPassword
                 }, {
