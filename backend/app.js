@@ -26,8 +26,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 啟用 CORS 並允許 credentials
 app.use(cors({
-  origin: 'http://localhost:8080',  // 🔥 改成實際的前端地址
-  credentials: true                  // 允許傳送 cookies
+  origin: 'https://yehdg.github.io',  //  GitHub Pages 地址
+  credentials: true                   // 允許傳送 cookies
 }));
 
 app.use('/', indexRouter);
