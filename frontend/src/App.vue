@@ -75,7 +75,8 @@ export default {
     // 登出
     async logout() {
       try {
-        await this.axios.post('http://localhost:3000/member/logout', {}, {
+        // await this.axios.post('http://localhost:3000/member/logout', {}, {
+        await this.axios.post('https://two026toma-store.onrender.com/member/logout', {}, {
           withCredentials: true
         });
       } catch (error) {
@@ -112,7 +113,8 @@ export default {
     // 🔥 驗證登入狀態的方法
     async verifyLoginStatus() {
       try {
-        const response = await this.axios.get('http://localhost:3000/member/verify', {
+        //const response = await this.axios.get('http://localhost:3000/member/verify', {
+        const response = await this.axios.get('https://two026toma-store.onrender.com/member/verify', {
           withCredentials: true
         });
         
@@ -204,7 +206,6 @@ export default {
       }, 3000);
     }
   }
-
 }
 </script>
 

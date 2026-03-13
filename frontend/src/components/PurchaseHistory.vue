@@ -127,7 +127,8 @@ export default {
     async loadOrders() {
       try {
         this.loading = true;
-        const response = await this.axios.get('http://localhost:3000/api/orders/member', {
+        // const response = await this.axios.get('http://localhost:3000/api/orders/member', {
+        const response = await this.axios.get('https://two026toma-store.onrender.com/api/orders/member', {
           withCredentials: true
         });
         

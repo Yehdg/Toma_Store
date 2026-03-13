@@ -107,7 +107,9 @@ export default {
         })
         
         // 發送登入請求到後端（Cookie 會自動設定）
-        const response = await this.axios.post('http://localhost:3000/member/login', {
+        
+        // const response = await this.axios.post('http://localhost:3000/member/login', {
+        const response = await this.axios.post('https://two026toma-store.onrender.com/member/login', {
           email: this.email,
           password: this.password
         }, {
