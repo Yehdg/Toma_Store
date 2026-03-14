@@ -55,6 +55,10 @@ module.exports = class Member {
 
   async postLogin(req, res, next) {
     try {
+      // 🔍 DEBUG: 檢查環境變數
+      console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
+      console.log('NODE_ENV:', process.env.NODE_ENV);
+      
       // 使用 check 檢查必填欄位
       if (
         check.checkEmpty(req.body.email) ||
@@ -89,8 +93,8 @@ module.exports = class Member {
       // 用 httpOnly Cookie（更安全）
       res.cookie('auth-token', token, {
         httpOnly: true,     // JavaScript 無法讀取
-        secure: true,       // Railway 使用 HTTPS，強制設為 true
-        sameSite: 'none',   // 跨域 cookie 必需
+        secure: process.env.NODE_ENV === 'production', // 回到動態判斷
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 60 * 60 * 1000, // 1 小時（毫秒）
       });
 
