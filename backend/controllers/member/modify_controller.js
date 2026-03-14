@@ -55,10 +55,6 @@ module.exports = class Member {
 
   async postLogin(req, res, next) {
     try {
-      // 🔍 DEBUG: 檢查環境變數
-      console.log('JWT_SECRET exists:', !!process.env.JWT_SECRET);
-      console.log('NODE_ENV:', process.env.NODE_ENV);
-      
       // 使用 check 檢查必填欄位
       if (
         check.checkEmpty(req.body.email) ||
