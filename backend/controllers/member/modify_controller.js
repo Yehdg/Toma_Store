@@ -97,8 +97,9 @@ module.exports = class Member {
       // 🔍 DEBUG: 檢查 Cookie 設定參數  
       const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 1000,
+        secure: true,  // 在HTTPS環境必須為true  
+        maxAge: 60 * 60 * 1000, // 1小時
+        path: '/',     // 明確設定路徑
       };
       
       console.log('Cookie 設定參數:', cookieOptions);
@@ -106,7 +107,14 @@ module.exports = class Member {
       // 用 httpOnly Cookie（更安全）
       try {
         res.cookie('auth-token', token, cookieOptions);
+        
+        // 🔥 跨域環境下明確設定Set-Cookie header
+        const cookieString = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
+        res.header('Set-Cookie', cookieString);
+        
         console.log('✅ Cookie 設定成功');
+        console.log('Set-Cookie header:', cookieString);
+        
       } catch (cookieError) {
         console.log('❌ Cookie 設定失敗:', cookieError);
         throw cookieError;
@@ -442,9 +450,16 @@ module.exports = class Member {
   // 驗證登入狀態
   async getVerify(req, res, next) {
     try {
+      // 🔍 DEBUG: 檢查請求中的Cookie
+      console.log('🔍 Verify請求 - 全部cookies:', req.cookies);
+      console.log('🔍 Verify請求 - headers:', req.headers.cookie);
+      
       const token = req.cookies['auth-token'];
       
+      console.log('🔍 取得的token:', token ? `存在 (長度: ${token.length})` : '不存在');
+      
       if (!token) {
+        console.log('❌ 驗證失敗: 沒有token');
         return res.json({
           result: { status: 'invalid', err: '未登入' }
         });
@@ -452,17 +467,22 @@ module.exports = class Member {
       
       const tokenResult = await verifyToken(token);
       
+      console.log('🔍 Token驗證結果:', tokenResult);
+      
       if (tokenResult === false) {
+        console.log('❌ 驗證失敗: Token無效或過期');
         return res.json({
           result: { status: 'invalid', err: 'Token已過期' }
         });
       }
       
+      console.log('✅ 驗證成功:', tokenResult);
       res.json({
         result: { status: 'valid', memberId: tokenResult }
       });
       
     } catch (error) {
+      console.log('❌ 驗證異常:', error);
       res.json({
         result: { status: 'invalid', err: '驗證失敗' }
       });

@@ -30,7 +30,10 @@ app.use(cors({
     'https://yehdg.github.io',
     'http://localhost:8080'  // 開發環境
   ],
-  credentials: true                   // 允許傳送 cookies
+  credentials: true,                   // 允許傳送 cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+  exposedHeaders: ['Set-Cookie']       // 允許前端讀取Set-Cookie header
 }));
 
 app.use('/', indexRouter);
