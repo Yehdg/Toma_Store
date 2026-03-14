@@ -14,6 +14,9 @@ vue.use(VueAxios, axios);
 
 export default new Router({
   routes: [{
+    path: '/',
+    redirect: '/store'  // 🔥 根路徑直接重定向到商店頁面
+  }, {
     path: '/store',
     name: 'store',
     component: Store,
