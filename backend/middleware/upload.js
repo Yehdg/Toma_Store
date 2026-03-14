@@ -37,7 +37,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 2 * 1024 * 1024  // 降低到 2MB（base64會增加體積）
+        fileSize: 5 * 1024 * 1024  // 提高到 5MB
     },
     fileFilter: fileFilter
 });

@@ -151,14 +151,6 @@ module.exports = class Member {
       // 使用 token 中的會員ID 查詢會員資料
       const memberData = await getMemberInfoModel(tokenResult);
 
-      // 🔍 DEBUG: 檢查會員資料中的頭像
-      console.log('🔍 會員頭像資訊:', {
-        hasImg: !!memberData.member.img,
-        imgType: memberData.member.img ? 'Base64' : 'null',
-        imgLength: memberData.member.img ? memberData.member.img.length : 0,
-        imgPreview: memberData.member.img ? memberData.member.img.substring(0, 50) + '...' : 'null'
-      });
-
       res.json({
         result: {
           status: "取得資料成功。",
@@ -395,15 +387,7 @@ module.exports = class Member {
       const mimeType = req.file.mimetype;
       const base64Image = `data:${mimeType};base64,${imageBuffer.toString('base64')}`;
       
-      // � DEBUG: 檢查生成的 Base64 資料
-      console.log('🔍 檔案資訊:', {
-        originalName: req.file.originalname,
-        mimeType: mimeType,
-        size: imageBuffer.length,
-        base64Length: base64Image.length,
-        base64Preview: base64Image.substring(0, 50) + '...'
-      });
-      
+
       // 🔥 準備更新資料 - 儲存 base64 字串
       const updateData = {
         img: base64Image,                    // 儲存完整的 base64 data URI
@@ -413,9 +397,6 @@ module.exports = class Member {
       
       // 🔥 更新資料庫
       const result = await updateMember(memberId, updateData);
-      
-      // 🔍 DEBUG: 檢查更新結果
-      console.log('🔍 資料庫更新結果:', result ? '成功' : '失敗');
       
       res.json({
         result: {
