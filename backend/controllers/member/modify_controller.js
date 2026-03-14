@@ -75,6 +75,10 @@ module.exports = class Member {
       };
 
       const result = await toLogin(memberData);
+      
+      // 🔍 DEBUG: 檢查登入結果
+      console.log('登入模型回傳結果:', result);
+      console.log('會員ID:', result.member?.id);
 
       // 登入成功，產生 token
       const token = jwt.sign(
@@ -85,6 +89,10 @@ module.exports = class Member {
         },
         process.env.JWT_SECRET
       );
+      
+      // 🔍 DEBUG: 檢查 JWT token
+      console.log('JWT token 生成成功:', !!token);
+      console.log('Token 長度:', token?.length);
 
       // 用 httpOnly Cookie（更安全）
       res.cookie('auth-token', token, {
@@ -93,6 +101,9 @@ module.exports = class Member {
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 60 * 60 * 1000, // 1 小時（毫秒）
       });
+      
+      // 🔍 DEBUG: Cookie 設定完成
+      console.log('Cookie 設定完成，準備回傳成功回應');
 
       res.json({
         result: {
