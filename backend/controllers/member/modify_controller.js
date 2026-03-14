@@ -89,8 +89,8 @@ module.exports = class Member {
       // 用 httpOnly Cookie（更安全）
       res.cookie('auth-token', token, {
         httpOnly: true,     // JavaScript 無法讀取
-        secure: false,      // 本地開發用 false，正式環境改 true
-        sameSite: 'lax',    // 防 CSRF 攻擊
+        secure: true,       // Railway 使用 HTTPS，強制設為 true
+        sameSite: 'none',   // 跨域 cookie 必需
         maxAge: 60 * 60 * 1000, // 1 小時（毫秒）
       });
 
