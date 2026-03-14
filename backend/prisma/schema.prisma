@@ -12,7 +12,7 @@ model Member {
   name       String      @db.VarChar(30)
   email      String      @unique @db.VarChar(30)
   password   String      @db.VarChar(200)
-  img        String?     @db.VarChar(255)
+  img        String?     @db.Text        // 🔥 改為 TEXT 儲存 base64
   imgName    String?     @map("img_name") @db.VarChar(100)
   phone      String?     @db.VarChar(20)
   updateDate DateTime?   @map("update_date") @db.DateTime(0)

@@ -340,15 +340,17 @@ module.exports = class Member {
     try {
       // 🔥 從 Cookie 讀取 token
       const token = req.cookies['auth-token'];
+      
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
         return res.json({
           result: {
             status: "更新失敗。",
-            err: "請輸入token！",
+            err: "請重新登入！",
           },
         });
       }
+      
       const tokenResult = await verifyToken(token);
       if (tokenResult === false) {
         return res.json({
@@ -360,6 +362,7 @@ module.exports = class Member {
       }
       
       const memberId = tokenResult;
+      
       if (!req.file) {
         return res.json({
           result: {
@@ -389,7 +392,7 @@ module.exports = class Member {
         img: base64Image,                    // 儲存完整的 base64 data URI
         imgName: req.file.originalname,      // 儲存原始檔名
         updateDate: new Date()
-      }
+      };
       
       // 🔥 更新資料庫
       const result = await updateMember(memberId, updateData);
@@ -401,15 +404,15 @@ module.exports = class Member {
           fileName: req.file.originalname
         }
       });
-    }
-    catch (err) {
+      
+    } catch (err) {
       console.log('頭像上傳錯誤:', err);
-        res.json({
-            result: {
-                status: "上傳失敗。",
-                err: "系統錯誤，請稍後再試！"
-            }
-        });
+      res.json({
+        result: {
+          status: "上傳失敗。",
+          err: "系統錯誤，請稍後再試！"
+        }
+      });
     }
   }
 
