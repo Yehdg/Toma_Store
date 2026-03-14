@@ -3,9 +3,6 @@
   <!-- 功能列表 -->
   <div class="cart-header">
     <div class="header-row">
-      <div class="col-select">
-        <input type="checkbox">
-      </div>
       <div class="col-product">商品</div>
       <div class="col-price">單價(1斤)</div>
       <div class="col-quantity">數量</div>
@@ -18,9 +15,6 @@
   <div class="cart-body">
     <ul class="cart-list">
       <li v-for="product in products" :key="product.id" class="cart-products">
-        <div class="col-select"> 
-          <input type="checkbox" v-model="product.selected">
-        </div>
         <div class="col-product">
           <img :src="product.image_url" :alt="product.name" class="product-img">
           <span class="product-name">{{ product.name }}</span>
@@ -127,8 +121,7 @@ export default {
             // 結合商品資料和購物車數量
             const cartProduct = {
               ...product,
-              cartQuantity: cartItem.quantity || 1,  // 購物車中的數量
-              selected: false  // 預設未選中
+              cartQuantity: cartItem.quantity || 1  // 購物車中的數量
             };
             
             this.products.push(cartProduct);
@@ -247,7 +240,7 @@ export default {
 <style>
 .header-row {
   display: grid;
-  grid-template-columns: 60px 1fr 120px 150px 120px 100px;
+  grid-template-columns: 1fr 120px 150px 120px 100px;
   gap: 15px;
   align-items: center;
   padding: 20px;
@@ -256,7 +249,6 @@ export default {
   border: 1px solid #e2dddd;
 }
 
-.col-select { text-align: center; }
 .col-product, .col-price, .col-quantity, .col-total, .col-action, .col-delete { text-align: center; }
 .col-quantity input {
   width: 50px;
@@ -271,7 +263,7 @@ export default {
 
 .cart-products {
   display: grid;
-  grid-template-columns: 60px 1fr 120px 150px 120px 100px;
+  grid-template-columns: 1fr 120px 150px 120px 100px;
   gap: 15px;
   align-items: center;
   padding: 10px 20px;           /* 與 header-row 相同的左右 padding */
@@ -307,7 +299,6 @@ input[type="number"]::-webkit-inner-spin-button {
     display: none;
   }
   
-  .col-select, 
   .col-price,
   .price {
     display: none !important;
