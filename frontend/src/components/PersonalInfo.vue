@@ -111,11 +111,6 @@ export default {
           };
           
           console.log('用戶資料載入成功:', this.userInfo);
-          console.log('圖片資料:', { 
-            hasImg: !!memberData.img, 
-            isBase64: this.isBase64Image(memberData.img),
-            imgPreview: memberData.img ? memberData.img.substring(0, 50) + '...' : 'null' 
-          });
         } else {
           throw new Error(response.data.result.err || '載入失敗');
         }
@@ -130,7 +125,19 @@ export default {
       const file = event.target.files[0];
       
       if (file) {
-        console.log('選擇的檔案:', file);
+        // 🔥 檢查檔案大小（建議不超過2MB原始檔案）
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        if (file.size > maxSize) {
+          alert(`圖片檔案太大！請選擇小於 ${Math.round(maxSize/1024/1024)}MB 的圖片。`);
+          event.target.value = ''; // 清除選擇
+          return;
+        }
+        
+        console.log('選擇的檔案:', {
+          name: file.name,
+          size: Math.round(file.size/1024) + 'KB',
+          type: file.type
+        });
         
         // 儲存檔案供稍後上傳
         this.selectedFile = file;
@@ -210,13 +217,6 @@ export default {
           
           if (avatarResponse.data.result.status === '頭像上傳成功。') {
             // 🔥 更新頭像為伺服器回傳的 base64
-            console.log('上傳成功回應:', {
-              hasAvatarBase64: !!avatarResponse.data.result.avatarBase64,
-              isValidBase64: this.isBase64Image(avatarResponse.data.result.avatarBase64),
-              base64Preview: avatarResponse.data.result.avatarBase64 ? 
-                avatarResponse.data.result.avatarBase64.substring(0, 50) + '...' : 'null'
-            });
-            
             this.userInfo.picture = avatarResponse.data.result.avatarBase64;
             this.selectedFile = null; // 清除選中的檔案
             
