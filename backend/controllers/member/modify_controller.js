@@ -94,23 +94,39 @@ module.exports = class Member {
       console.log('JWT token 生成成功:', !!token);
       console.log('Token 長度:', token?.length);
 
-      // 用 httpOnly Cookie（更安全）
-      res.cookie('auth-token', token, {
-        httpOnly: true,     // JavaScript 無法讀取
-        secure: process.env.NODE_ENV === 'production', // 回到動態判斷
+      // 🔍 DEBUG: 檢查 Cookie 設定參數
+      const cookieOptions = {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 60 * 60 * 1000, // 1 小時（毫秒）
-      });
+        maxAge: 60 * 60 * 1000,
+      };
+      console.log('Cookie 設定參數:', cookieOptions);
+
+      // 用 httpOnly Cookie（更安全）
+      try {
+        res.cookie('auth-token', token, cookieOptions);
+        console.log('✅ Cookie 設定成功');
+      } catch (cookieError) {
+        console.log('❌ Cookie 設定失敗:', cookieError);
+        throw cookieError;
+      }
       
       // 🔍 DEBUG: Cookie 設定完成
       console.log('Cookie 設定完成，準備回傳成功回應');
 
-      res.json({
-        result: {
-          status: "登入成功。",
-          loginMember: "歡迎 " + result.member.name + " 的登入！",
-        },
-      });
+      try {
+        res.json({
+          result: {
+            status: "登入成功。",
+            loginMember: "歡迎 " + result.member.name + " 的登入！",
+          },
+        });
+        console.log('✅ 成功回應已送出');
+      } catch (responseError) {
+        console.log('❌ 回應送出失敗:', responseError);
+        throw responseError;
+      }
     } catch (err) {
       res.json({
         result: {
