@@ -12,17 +12,11 @@ module.exports = function memberLogin(memberData) {
                 }
             });
 
-            // 🔍 DEBUG: 檢查會員是否存在
-            console.log('登入嘗試 - Email:', memberData.email);
-            console.log('找到會員:', !!existMember);
-
             if (!existMember) {
                 throw new Error("帳號或密碼錯誤！");
             }
 
-            // 🔍 DEBUG: 檢查密碼比對
-            console.log('資料庫密碼長度:', existMember.password?.length);
-            console.log('輸入密碼:', memberData.password);
+
 
             // 用 bcrypt 比對密碼
             const isPasswordValid = await passwordHelper.comparePassword(

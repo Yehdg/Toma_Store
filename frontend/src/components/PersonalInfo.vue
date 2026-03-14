@@ -5,7 +5,7 @@
       <div class="form-group avatar-group">
         <div class="avatar-container">
           <img 
-            :src="userInfo.picture || defaultAvatar" 
+            :src="getSafeImageSrc()" 
             @error="handleImageError"
             class="avatar-image" 
           >
@@ -72,7 +72,8 @@ export default {
   data() {
     return {
       editMode: false,
-      defaultAvatar: '',
+      // 🔥 設定預設頭像為一個簡單的灰色圓形 SVG
+      defaultAvatar: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjUwIiBjeT0iNTAiIHI9IjUwIiBmaWxsPSIjQ0NDQ0NDIi8+CjxjaXJjbGUgY3g9IjUwIiBjeT0iMzUiIHI9IjE1IiBmaWxsPSIjOTk5OTk5Ii8+CjxwYXRoIGQ9Ik0yMCA3NUMzMCA2NSA3MCA2NSA4MCA3NVY5MEMwIDkwIDAgNzUgMjAgNzVaIiBmaWxsPSIjOTk5OTk5Ii8+Cjwvc3ZnPgo=',
       selectedFile: null, // 🔥 新增：儲存選中的檔案
       userInfo: {
         name: 'Loading....',
@@ -105,11 +106,16 @@ export default {
             email: memberData.email,
             phone: memberData.phone || '尚未設定',  // 如果沒有電話資料
             createDate: memberData.createDate,
-            // 🔥 改為直接使用 base64 圖片（如果存在的話）
-            picture: memberData.img || null  // memberData.img 現在是完整的 base64 data URI
+            // 🔥 檢查是否為 base64 格式，如果不是就設為 null
+            picture: this.isBase64Image(memberData.img) ? memberData.img : null
           };
           
           console.log('用戶資料載入成功:', this.userInfo);
+          console.log('圖片資料:', { 
+            hasImg: !!memberData.img, 
+            isBase64: this.isBase64Image(memberData.img),
+            imgPreview: memberData.img ? memberData.img.substring(0, 50) + '...' : 'null' 
+          });
         } else {
           throw new Error(response.data.result.err || '載入失敗');
         }
@@ -142,6 +148,22 @@ export default {
     handleImageError() {
       console.log('圖片載入失敗，使用預設頭貼');
       this.userInfo.picture = null;
+    },
+    
+    // 🔥 新增：檢查是否為 base64 圖片格式
+    isBase64Image(str) {
+      if (!str || typeof str !== 'string') return false;
+      // 檢查是否以 data:image 開頭的 base64 格式
+      return str.startsWith('data:image/') && str.includes(';base64,');
+    },
+    
+    // 🔥 新增：安全取得圖片來源
+    getSafeImageSrc() {
+      // 如果沒有圖片或圖片不是有效的base64格式，使用預設頭像
+      if (!this.userInfo.picture || !this.isBase64Image(this.userInfo.picture)) {
+        return this.defaultAvatar;
+      }
+      return this.userInfo.picture;
     },
     
     // 切換編輯模式
@@ -188,8 +210,17 @@ export default {
           
           if (avatarResponse.data.result.status === '頭像上傳成功。') {
             // 🔥 更新頭像為伺服器回傳的 base64
+            console.log('上傳成功回應:', {
+              hasAvatarBase64: !!avatarResponse.data.result.avatarBase64,
+              isValidBase64: this.isBase64Image(avatarResponse.data.result.avatarBase64),
+              base64Preview: avatarResponse.data.result.avatarBase64 ? 
+                avatarResponse.data.result.avatarBase64.substring(0, 50) + '...' : 'null'
+            });
+            
             this.userInfo.picture = avatarResponse.data.result.avatarBase64;
             this.selectedFile = null; // 清除選中的檔案
+            
+            alert('頭像上傳成功！');
           } else {
             throw new Error(avatarResponse.data.result.err || '頭像上傳失敗');
           }
