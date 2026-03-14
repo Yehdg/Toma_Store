@@ -94,13 +94,13 @@ module.exports = class Member {
       console.log('JWT token 生成成功:', !!token);
       console.log('Token 長度:', token?.length);
 
-      // 🔍 DEBUG: 檢查 Cookie 設定參數
+      // 🔍 DEBUG: 檢查 Cookie 設定參數  
       const cookieOptions = {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         maxAge: 60 * 60 * 1000,
       };
+      
       console.log('Cookie 設定參數:', cookieOptions);
 
       // 用 httpOnly Cookie（更安全）
