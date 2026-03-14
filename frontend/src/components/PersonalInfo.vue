@@ -105,8 +105,8 @@ export default {
             email: memberData.email,
             phone: memberData.phone || '尚未設定',  // 如果沒有電話資料
             createDate: memberData.createDate,
-            // picture: memberData.img ? `http://localhost:3000${memberData.img}` : null
-            picture: memberData.img ? `https://tomastore-production.up.railway.app${memberData.img}` : null
+            // 🔥 改為直接使用 base64 圖片（如果存在的話）
+            picture: memberData.img || null  // memberData.img 現在是完整的 base64 data URI
           };
           
           console.log('用戶資料載入成功:', this.userInfo);
@@ -187,9 +187,8 @@ export default {
           });
           
           if (avatarResponse.data.result.status === '頭像上傳成功。') {
-            // 更新頭像為伺服器路徑
-            // this.userInfo.picture = `http://localhost:3000${avatarResponse.data.result.avatarURL}`;
-            this.userInfo.picture = `https://tomastore-production.up.railway.app${avatarResponse.data.result.avatarURL}`;
+            // 🔥 更新頭像為伺服器回傳的 base64
+            this.userInfo.picture = avatarResponse.data.result.avatarBase64;
             this.selectedFile = null; // 清除選中的檔案
           } else {
             throw new Error(avatarResponse.data.result.err || '頭像上傳失敗');

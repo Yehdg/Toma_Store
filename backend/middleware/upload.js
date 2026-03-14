@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 
 // 儲存設定
+/* 檔案形式
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         // 會員頭像儲存路徑
@@ -12,7 +13,9 @@ const storage = multer.diskStorage({
         const uniqueName = `avatar-${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
         cb(null, uniqueName);
     }
-});
+});*/
+// 記憶體儲存，避免檔案系統問題
+const storage = multer.memoryStorage();
 
 // 檔案格式過濾器
 const fileFilter = (req, file, cb) => {
@@ -34,7 +37,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024  // 5MB 檔案大小限制
+        fileSize: 2 * 1024 * 1024  // 降低到 2MB（base64會增加體積）
     },
     fileFilter: fileFilter
 });

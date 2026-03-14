@@ -75,10 +75,6 @@ module.exports = class Member {
       };
 
       const result = await toLogin(memberData);
-      
-      // 🔍 DEBUG: 檢查登入結果
-      console.log('登入模型回傳結果:', result);
-      console.log('會員ID:', result.member?.id);
 
       // 登入成功，產生 token
       const token = jwt.sign(
@@ -90,19 +86,12 @@ module.exports = class Member {
         process.env.JWT_SECRET
       );
       
-      // 🔍 DEBUG: 檢查 JWT token
-      console.log('JWT token 生成成功:', !!token);
-      console.log('Token 長度:', token?.length);
-
-      // 🔍 DEBUG: 檢查 Cookie 設定參數  
       const cookieOptions = {
         httpOnly: true,
         secure: true,  // 在HTTPS環境必須為true  
         maxAge: 60 * 60 * 1000, // 1小時
-        path: '/',     // 明確設定路徑
+        path: '/',     
       };
-      
-      console.log('Cookie 設定參數:', cookieOptions);
 
       // 用 httpOnly Cookie（更安全）
       try {
@@ -112,29 +101,16 @@ module.exports = class Member {
         const cookieString = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
         res.header('Set-Cookie', cookieString);
         
-        console.log('✅ Cookie 設定成功');
-        console.log('Set-Cookie header:', cookieString);
-        
       } catch (cookieError) {
-        console.log('❌ Cookie 設定失敗:', cookieError);
         throw cookieError;
       }
       
-      // 🔍 DEBUG: Cookie 設定完成
-      console.log('Cookie 設定完成，準備回傳成功回應');
-
-      try {
-        res.json({
-          result: {
-            status: "登入成功。",
-            loginMember: "歡迎 " + result.member.name + " 的登入！",
-          },
-        });
-        console.log('✅ 成功回應已送出');
-      } catch (responseError) {
-        console.log('❌ 回應送出失敗:', responseError);
-        throw responseError;
-      }
+      res.json({
+        result: {
+          status: "登入成功。",
+          loginMember: "歡迎 " + result.member.name + " 的登入！",
+        },
+      });
     } catch (err) {
       res.json({
         result: {
@@ -392,52 +368,42 @@ module.exports = class Member {
           },
         });
       }
-      
-      // 1. 先取得會員目前的頭像資訊，準備刪除舊檔案
+      /*
+      // 1.先取得會員目前的頭像資訊，準備刪除舊檔案
       const prisma = require("../../models/prisma_client");
       const currentMember = await prisma.member.findUnique({
         where: { id: parseInt(memberId) }
       });
       
-      // 2. 準備新檔案資訊
+      // 2.準備新檔案資訊
       const avatarPath = `/uploads/avatars/${req.file.filename}`;
       const uniqueFileName = req.file.filename; // 系統生成的唯一檔名
+      */
+      // 🔥 新方法：將圖片轉為 Base64 儲存到資料庫
+      const imageBuffer = req.file.buffer;
+      const mimeType = req.file.mimetype;
+      const base64Image = `data:${mimeType};base64,${imageBuffer.toString('base64')}`;
       
+      // 🔥 準備更新資料 - 儲存 base64 字串
       const updateData = {
-        img: String(avatarPath),
-        imgName: String(uniqueFileName), // 儲存唯一檔名，不是原始檔名
+        img: base64Image,                    // 儲存完整的 base64 data URI
+        imgName: req.file.originalname,      // 儲存原始檔名
         updateDate: new Date()
       }
       
-      // 3. 更新資料庫
+      // 🔥 更新資料庫
       const result = await updateMember(memberId, updateData);
-      
-      // 4. 刪除舊檔案（如果存在且不是預設值）
-      if (currentMember && currentMember.imgName && currentMember.imgName !== uniqueFileName) {
-        const oldFilePath = path.join(__dirname, '..', '..', 'public', 'uploads', 'avatars', currentMember.imgName);
-        try {
-          if (fs.existsSync(oldFilePath)) {
-            fs.unlinkSync(oldFilePath);
-            console.log(`已刪除舊檔案: ${currentMember.imgName}`);
-          } else {
-            console.log(`舊檔案不存在: ${oldFilePath}`);
-          }
-        } catch (deleteError) {
-          console.log(`刪除舊檔案失敗: ${deleteError.message}`);
-          // 不中斷流程，檔案刪除失敗不影響功能
-        }
-      }
       
       res.json({
         result: {
           status: "頭像上傳成功。",
-          avatarURL: avatarPath,
-          fileName: uniqueFileName
+          avatarBase64: base64Image,         // 回傳 base64 給前端直接使用
+          fileName: req.file.originalname
         }
       });
     }
     catch (err) {
-      console.log(err);
+      console.log('頭像上傳錯誤:', err);
         res.json({
             result: {
                 status: "上傳失敗。",
@@ -450,16 +416,9 @@ module.exports = class Member {
   // 驗證登入狀態
   async getVerify(req, res, next) {
     try {
-      // 🔍 DEBUG: 檢查請求中的Cookie
-      console.log('🔍 Verify請求 - 全部cookies:', req.cookies);
-      console.log('🔍 Verify請求 - headers:', req.headers.cookie);
-      
       const token = req.cookies['auth-token'];
       
-      console.log('🔍 取得的token:', token ? `存在 (長度: ${token.length})` : '不存在');
-      
       if (!token) {
-        console.log('❌ 驗證失敗: 沒有token');
         return res.json({
           result: { status: 'invalid', err: '未登入' }
         });
@@ -467,22 +426,17 @@ module.exports = class Member {
       
       const tokenResult = await verifyToken(token);
       
-      console.log('🔍 Token驗證結果:', tokenResult);
-      
       if (tokenResult === false) {
-        console.log('❌ 驗證失敗: Token無效或過期');
         return res.json({
           result: { status: 'invalid', err: 'Token已過期' }
         });
       }
       
-      console.log('✅ 驗證成功:', tokenResult);
       res.json({
         result: { status: 'valid', memberId: tokenResult }
       });
       
     } catch (error) {
-      console.log('❌ 驗證異常:', error);
       res.json({
         result: { status: 'invalid', err: '驗證失敗' }
       });
@@ -491,13 +445,33 @@ module.exports = class Member {
 
   // 登出
   postLogout(req, res, next) {
-    // 清除 Cookie
-    res.clearCookie('auth-token');
-    res.json({
-      result: {
-        status: "登出成功。",
-        message: "已安全登出"
-      }
-    });
+    // 🔥 雙重清除 Cookie - 對應登入時的雙重設定
+    try {
+      // 1. Express 方式清除
+      res.clearCookie('auth-token', {
+        httpOnly: true,
+        secure: true,
+        path: '/'
+      });
+      
+      // 2. 手動設定過期的 Set-Cookie header（立即過期）
+      const expiredCookieString = 'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      res.header('Set-Cookie', expiredCookieString);
+      
+      res.json({
+        result: {
+          status: "登出成功。",
+          message: "已安全登出"
+        }
+      });
+      
+    } catch (error) {
+      res.json({
+        result: {
+          status: "登出失敗。", 
+          err: "伺服器錯誤"
+        }
+      });
+    }
   }
 };
