@@ -98,14 +98,17 @@ module.exports = class Member {
         // 方法1: Express標準方式
         res.cookie('auth-token', token, cookieOptions);
         
-        // 方法2: 寬鬆的跨域設定（無痕模式相容）
-        const cookieString1 = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
+        // 方法2: 加強的跨域設定（支援無痕模式）
+        const cookieString1 = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None; Domain=.railway.app`;
         
         // 方法3: 備用設定（部分手機瀏覽器相容）  
         const cookieString2 = `auth-token-backup=${token}; HttpOnly; Secure; Path=/; Max-Age=3600`;
         
         // 設定多個Cookie header
         res.setHeader('Set-Cookie', [cookieString1, cookieString2]);
+        
+        // 🔥 新增：同時在回應中提供 token 給前端儲存（無痕模式 fallback）
+        res.setHeader('X-Auth-Token', token);
         
       } catch (cookieError) {
         throw cookieError;
@@ -130,8 +133,10 @@ module.exports = class Member {
   // 🔥 新增：取得會員資料
   async getMemberInfo(req, res, next) {
     try {
-      // 🔥 多重Cookie檢查
-      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
+      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      const token = req.cookies['auth-token'] || 
+                   req.cookies['auth-token-backup'] || 
+                   req.get('Authorization')?.replace('Bearer ', '');
 
       // 檢查 token 是否存在
       if (check.checkEmpty(token)) {
@@ -177,8 +182,10 @@ module.exports = class Member {
 
   async putUpdate(req, res, next) {
     try {
-      // 🔥 多重Cookie檢查
-      const token = req.cookies["auth-token"] || req.cookies["auth-token-backup"];
+      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      const token = req.cookies['auth-token'] || 
+                   req.cookies['auth-token-backup'] || 
+                   req.get('Authorization')?.replace('Bearer ', '');
 
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -252,8 +259,10 @@ module.exports = class Member {
 
   async putUpdatePassword(req, res, next) {
     try {
-      // 🔥 多重Cookie檢查
-      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
+      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      const token = req.cookies['auth-token'] || 
+                   req.cookies['auth-token-backup'] || 
+                   req.get('Authorization')?.replace('Bearer ', '');
       
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -345,8 +354,10 @@ module.exports = class Member {
   
   async putUpdateImage(req, res, next) {
     try {
-      // 🔥 多重Cookie檢查
-      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
+      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      const token = req.cookies['auth-token'] || 
+                   req.cookies['auth-token-backup'] || 
+                   req.get('Authorization')?.replace('Bearer ', '');
       
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -427,8 +438,10 @@ module.exports = class Member {
   // 驗證登入狀態
   async getVerify(req, res, next) {
     try {
-      // 🔥 多重Cookie檢查，優先主要token，備用backup token
-      let token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
+      // 🔥 混合身份驗證：優先Cookie，後備Authorization header（支援無痕模式）
+      let token = req.cookies['auth-token'] || 
+                  req.cookies['auth-token-backup'] || 
+                  req.get('Authorization')?.replace('Bearer ', '');
       
       if (!token) {
         return res.json({

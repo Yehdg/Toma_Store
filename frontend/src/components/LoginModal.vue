@@ -120,7 +120,13 @@ export default {
         
         // 檢查登入是否成功
         if (response.data.result.status === '登入成功。') {
-          // 🔥 不需要手動保存 token，Cookie 自動處理
+          // 🔥 混合認證策略：保存token作為無痕模式fallback
+          const authToken = response.headers['x-auth-token'];
+          if (authToken) {
+            // 使用sessionStorage，關閉瀏覽器就清除（安全性考量）
+            sessionStorage.setItem('auth-fallback-token', authToken);
+            console.log('已保存fallback token for 無痕模式');
+          }
           
           // 🔥 只記住帳號，不記住密碼
           if (this.rememberMe) {

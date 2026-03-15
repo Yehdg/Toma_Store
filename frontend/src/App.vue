@@ -83,6 +83,9 @@ export default {
         // 登出請求失敗，但仍更新前端狀態
       }
       
+      // 🔥 清除fallback token（無痕模式支援）
+      sessionStorage.removeItem('auth-fallback-token');
+      
       this.isLogined = false;
       
       if (this.$route.path !== '/store') {
@@ -187,6 +190,9 @@ export default {
         this.isHandlingTokenExpired = false;
         return;
       }
+      
+      // 🔥 清除fallback token（無痕模式支援）
+      sessionStorage.removeItem('auth-fallback-token');
       
       // 更新登入狀態
       this.isLogined = false;

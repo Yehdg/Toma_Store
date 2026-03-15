@@ -32,8 +32,8 @@ app.use(cors({
   ],
   credentials: true,                   // 允許傳送 cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
-  exposedHeaders: ['Set-Cookie']       // 允許前端讀取Set-Cookie header
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Auth-Token'],
+  exposedHeaders: ['Set-Cookie', 'X-Auth-Token']       // 🔥 允許前端讀取 auth token
 }));
 
 app.use('/', indexRouter);
