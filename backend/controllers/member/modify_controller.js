@@ -91,7 +91,7 @@ module.exports = class Member {
         secure: true,  // 在HTTPS環境必須為true  
         maxAge: 60 * 60 * 1000, // 1小時
         path: '/',     
-        sameSite: 'None'  // 🔥 加上跨域支援
+        sameSite: 'lax'  // 🔥 加上跨域支援
       };
 
       // 🔥 多重Cookie設定策略，確保跨瀏覽器相容性
