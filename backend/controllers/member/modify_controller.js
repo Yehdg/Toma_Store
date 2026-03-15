@@ -91,10 +91,10 @@ module.exports = class Member {
         secure: true,  // 在HTTPS環境必須為true  
         maxAge: 60 * 60 * 1000, // 1小時
         path: '/',     
-        sameSite: 'lax'  // 🔥 加上跨域支援
+        sameSite: 'lax' 
       };
 
-      // 🔥 多重Cookie設定策略，確保跨瀏覽器相容性
+      // 多重Cookie設定策略，確保跨瀏覽器相容性
       try {
         // 方法1: Express標準方式
         res.cookie('auth-token', token, cookieOptions);
@@ -108,7 +108,7 @@ module.exports = class Member {
         // 設定多個Cookie header
         res.setHeader('Set-Cookie', [cookieString1, cookieString2]);
         
-        // 🔥 新增：同時在回應中提供 token 給前端儲存（無痕模式 fallback）
+        // 同時在回應中提供 token 給前端儲存（無痕模式 fallback）
         res.setHeader('X-Auth-Token', token);
         
       } catch (cookieError) {
@@ -131,10 +131,10 @@ module.exports = class Member {
     }
   }
 
-  // 🔥 新增：取得會員資料
+  // 取得會員資料
   async getMemberInfo(req, res, next) {
     try {
-      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      // 混合身份驗證：優先Cookie，後備Authorization header
       const token = req.cookies['auth-token'] || 
                    req.cookies['auth-token-backup'] || 
                    req.get('Authorization')?.replace('Bearer ', '');
@@ -183,7 +183,7 @@ module.exports = class Member {
 
   async putUpdate(req, res, next) {
     try {
-      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      // 混合身份驗證：優先Cookie，後備Authorization header
       const token = req.cookies['auth-token'] || 
                    req.cookies['auth-token-backup'] || 
                    req.get('Authorization')?.replace('Bearer ', '');
@@ -260,7 +260,7 @@ module.exports = class Member {
 
   async putUpdatePassword(req, res, next) {
     try {
-      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      // 混合身份驗證：優先Cookie，後備Authorization header
       const token = req.cookies['auth-token'] || 
                    req.cookies['auth-token-backup'] || 
                    req.get('Authorization')?.replace('Bearer ', '');
@@ -355,7 +355,7 @@ module.exports = class Member {
   
   async putUpdateImage(req, res, next) {
     try {
-      // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+      // 混合身份驗證：優先Cookie，後備Authorization header
       const token = req.cookies['auth-token'] || 
                    req.cookies['auth-token-backup'] || 
                    req.get('Authorization')?.replace('Bearer ', '');
@@ -439,7 +439,7 @@ module.exports = class Member {
   // 驗證登入狀態
   async getVerify(req, res, next) {
     try {
-      // 🔥 混合身份驗證：優先Cookie，後備Authorization header（支援無痕模式）
+      // 混合身份驗證：優先Cookie，後備Authorization header（支援無痕模式）
       let token = req.cookies['auth-token'] || 
                   req.cookies['auth-token-backup'] || 
                   req.get('Authorization')?.replace('Bearer ', '');
@@ -471,7 +471,7 @@ module.exports = class Member {
 
   // 登出
   postLogout(req, res, next) {
-      // 🔥 雙重清除 Cookie - 對應登入時的雙重設定
+      // 雙重清除 Cookie - 對應登入時的雙重設定
       try {
         // 1. Express 方式清除
         res.clearCookie('auth-token', {

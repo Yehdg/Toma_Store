@@ -1,19 +1,6 @@
 const multer = require('multer');
 const path = require('path');
 
-// 儲存設定
-/* 檔案形式
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        // 會員頭像儲存路徑
-        cb(null, 'public/uploads/avatars/');
-    },
-    filename: (req, file, cb) => {
-        // 檔案命名規則：avatar-時間戳-隨機數.副檔名
-        const uniqueName = `avatar-${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
-        cb(null, uniqueName);
-    }
-});*/
 // 記憶體儲存，避免檔案系統問題
 const storage = multer.memoryStorage();
 
