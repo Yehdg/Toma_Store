@@ -8,7 +8,7 @@
 - **後端**: Railway 
 - **資料庫**: Railway (MySQL) 
 
-🌐 **Demo 展示**：[Toma Store 電商平台](https://yehdg.github.io/Toma_Store/)
+🌐 **Demo 展示**：[Toma Store 電商平台](https://yehdg.github.io/Toma_Store/)  
 (不想註冊)想直接登入的話：  
 ◇信箱：test@gmail.com   
 ◇密碼：1234  
@@ -82,23 +82,24 @@
 ![首頁截圖](./image-md/storepage.png)
 商品區，登入後，可以點選按鈕就會加入購物車。
 
-
+<br><br>
 
 #### ●購物車
 ![購物車頁面](./image-md/shoppingcart.png)
 購物車頁面會顯示有加入購物車的商品，會員可以選擇修改數量、刪除商品、下訂單所有商品。
 
-
+<br><br>
 
 #### ●會員功能
 ![註冊/登入頁面](./image-md/login%20register-page.png)
-註冊與登入的彈跳視窗，可以註冊帳號並登入。
+\[註冊/登入頁面\]註冊與登入的彈跳視窗，可以註冊帳號並登入。
 
+<br><br>
 
 ![會員區](./image-md/memberpage.png)
-會員可以修改自己的名稱、手機號碼、頭貼、密碼。
+\[會員區]\會員可以修改自己的名稱、手機號碼、頭貼、密碼。
 
+<br><br>
 
 ![購買紀錄](./image-md/buyhistorypage.png)
-會員可以查看過往的購買紀錄，可以依照狀態與時間來篩選。
-
+\[購買紀錄]\會員可以查看過往的購買紀錄，可以依照狀態與時間來篩選。
