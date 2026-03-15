@@ -246,7 +246,8 @@ export default {
   padding: 20px;
   margin: 20px auto 0 auto;  /* 自動置中 */
   max-width: 950px;         /* 固定最大寬度 */
-  border: 1px solid #e2dddd;
+  border: 1px solid #000000;
+  background-color: #f1f2e9;
 }
 
 .col-product, .col-price, .col-quantity, .col-total, .col-action, .col-delete { text-align: center; }
@@ -269,7 +270,8 @@ export default {
   padding: 10px 20px;           /* 與 header-row 相同的左右 padding */
   margin: 15px auto;            /* 自動置中對齊 */
   max-width: 950px;             /* 與 header-row 相同的最大寬度 */
-  border: 1px solid #5f4444;
+  border: 1px solid #000000;
+  background-color: #f1f2e9;
 }
 
 
