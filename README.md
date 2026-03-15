@@ -9,6 +9,9 @@
 - **資料庫**: Railway (MySQL) 
 
 🌐 **Demo 展示**：[Toma Store 電商平台](https://yehdg.github.io/Toma_Store/)
+(不想註冊)想直接登入的話：
+◇信箱：test@gmail.com
+◇密碼：1234
 
 ##  專案技術
 **前端：**
