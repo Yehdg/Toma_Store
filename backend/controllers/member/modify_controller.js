@@ -457,7 +457,6 @@ module.exports = class Member {
 
   // 登出
   postLogout(req, res, next) {
-    try {
       // 🔥 雙重清除 Cookie - 對應登入時的雙重設定
       try {
         // 1. Express 方式清除
