@@ -16,8 +16,10 @@ module.exports = class GetOrder  {
     // 查詢當前會員的訂單（會員用）
     async getMemberOrders(req, res, next) {
         try {
-            // 從 cookie 取得 token
-            const token = req.cookies['auth-token'];
+            // 🔥 混合身份驗證：優先Cookie，後備Authorization header
+            const token = req.cookies['auth-token'] || 
+                          req.cookies['auth-token-backup'] || 
+                          req.get('Authorization')?.replace('Bearer ', '');
             
             if (!token) {
                 return res.json({

@@ -5,7 +5,9 @@ const verifyToken = require("../../models/member/verification_model");
 module.exports = class ModifyOrder {
     async postOrderAllProduct(req, res, next) {
         try {
-            const token = req.cookies['auth-token'];
+            const token = req.cookies['auth-token'] || 
+                          req.cookies['auth-token-backup'] || 
+                          req.get('Authorization')?.replace('Bearer ', '');
         
             // 檢查 token 是否有輸入
             if (check.checkEmpty(token)) {
