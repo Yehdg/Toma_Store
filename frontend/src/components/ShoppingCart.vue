@@ -39,7 +39,7 @@
 
   <!-- 底部：結帳區域 -->
   <div class="cart-footer">
-    <button class="checked-btn" @click="OrderProducts">結帳</button>
+    <button class="checked-btn" @click="OrderProducts">下訂單</button>
   </div>
 </div>
 </template>

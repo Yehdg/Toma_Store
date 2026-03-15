@@ -93,13 +93,19 @@ module.exports = class Member {
         path: '/',     
       };
 
-      // 用 httpOnly Cookie（更安全）
+      // 🔥 多重Cookie設定策略，確保跨瀏覽器相容性
       try {
+        // 方法1: Express標準方式
         res.cookie('auth-token', token, cookieOptions);
         
-        // 🔥 跨域環境下明確設定Set-Cookie header
-        const cookieString = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
-        res.header('Set-Cookie', cookieString);
+        // 方法2: 寬鬆的跨域設定（無痕模式相容）
+        const cookieString1 = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
+        
+        // 方法3: 備用設定（部分手機瀏覽器相容）  
+        const cookieString2 = `auth-token-backup=${token}; HttpOnly; Secure; Path=/; Max-Age=3600`;
+        
+        // 設定多個Cookie header
+        res.setHeader('Set-Cookie', [cookieString1, cookieString2]);
         
       } catch (cookieError) {
         throw cookieError;
@@ -124,8 +130,8 @@ module.exports = class Member {
   // 🔥 新增：取得會員資料
   async getMemberInfo(req, res, next) {
     try {
-      // 從 Cookie 讀取 token
-      const token = req.cookies['auth-token'];
+      // 🔥 多重Cookie檢查
+      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
 
       // 檢查 token 是否存在
       if (check.checkEmpty(token)) {
@@ -171,8 +177,8 @@ module.exports = class Member {
 
   async putUpdate(req, res, next) {
     try {
-      // 🔥 從 Cookie 讀取 token，不是從 header
-      const token = req.cookies["auth-token"];
+      // 🔥 多重Cookie檢查
+      const token = req.cookies["auth-token"] || req.cookies["auth-token-backup"];
 
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -246,7 +252,8 @@ module.exports = class Member {
 
   async putUpdatePassword(req, res, next) {
     try {
-      const token = req.cookies['auth-token'];
+      // 🔥 多重Cookie檢查
+      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
       
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -338,8 +345,8 @@ module.exports = class Member {
   
   async putUpdateImage(req, res, next) {
     try {
-      // 🔥 從 Cookie 讀取 token
-      const token = req.cookies['auth-token'];
+      // 🔥 多重Cookie檢查
+      const token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
       
       // 檢查 token 是否有輸入
       if (check.checkEmpty(token)) {
@@ -420,7 +427,8 @@ module.exports = class Member {
   // 驗證登入狀態
   async getVerify(req, res, next) {
     try {
-      const token = req.cookies['auth-token'];
+      // 🔥 多重Cookie檢查，優先主要token，備用backup token
+      let token = req.cookies['auth-token'] || req.cookies['auth-token-backup'];
       
       if (!token) {
         return res.json({
@@ -449,33 +457,43 @@ module.exports = class Member {
 
   // 登出
   postLogout(req, res, next) {
-    // 🔥 雙重清除 Cookie - 對應登入時的雙重設定
     try {
-      // 1. Express 方式清除
-      res.clearCookie('auth-token', {
-        httpOnly: true,
-        secure: true,
-        path: '/'
-      });
-      
-      // 2. 手動設定過期的 Set-Cookie header（立即過期）
-      const expiredCookieString = 'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT';
-      res.header('Set-Cookie', expiredCookieString);
-      
-      res.json({
-        result: {
-          status: "登出成功。",
-          message: "已安全登出"
-        }
-      });
-      
-    } catch (error) {
-      res.json({
-        result: {
-          status: "登出失敗。", 
-          err: "伺服器錯誤"
-        }
-      });
-    }
+      // 🔥 雙重清除 Cookie - 對應登入時的雙重設定
+      try {
+        // 1. Express 方式清除
+        res.clearCookie('auth-token', {
+          httpOnly: true,
+          secure: true,
+          path: '/'
+        });
+        
+        res.clearCookie('auth-token-backup', {
+          httpOnly: true,
+          secure: true,
+          path: '/'
+        });
+        
+        // 2. 手動設定過期的 Set-Cookie header（立即過期）
+        const expiredCookies = [
+          'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+          'auth-token-backup=; HttpOnly; Secure; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        ];
+        res.setHeader('Set-Cookie', expiredCookies);
+        
+        res.json({
+          result: {
+            status: "登出成功。",
+            message: "已安全登出"
+          }
+        });
+        
+      } catch (error) {
+        res.json({
+          result: {
+            status: "登出失敗。", 
+            err: "伺服器錯誤"
+          }
+        });
+      }
   }
 };
