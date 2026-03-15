@@ -83,7 +83,7 @@ export default {
         // 登出請求失敗，但仍更新前端狀態
       }
       
-      // 🔥 清除fallback token（無痕模式支援）
+      // 清除fallback token（無痕模式支援）
       sessionStorage.removeItem('auth-fallback-token');
       
       this.isLogined = false;
@@ -124,11 +124,13 @@ export default {
         if (response.data.result && response.data.result.status === 'valid') {
           this.isLogined = true;
         } else {
-          // Token 無效或過期，觸發登出（會被攔截器處理）
+          // Token 無效或過期，清除所有認證資料
+          sessionStorage.removeItem('auth-fallback-token');
           this.isLogined = false;
         }
       } catch (error) {
-        // 請求失敗，設為未登入
+        // 請求失敗，清除所有認證資料並設為未登入
+        sessionStorage.removeItem('auth-fallback-token');
         this.isLogined = false;
       }
     },
@@ -216,6 +218,11 @@ export default {
 </script>
 
 <style>
+#app {
+  background: linear-gradient(135deg, #dce4ad 0%, #a7d5b2 80%);
+  min-height: 100vh;
+}
+
 .navbar {
   display: flex;
   justify-content: space-between;

@@ -101,8 +101,8 @@ module.exports = class Member {
         // 方法2: 加強的跨域設定（支援無痕模式）
         const cookieString1 = `auth-token=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None; Domain=.railway.app`;
         
-        // 方法3: 備用設定（部分手機瀏覽器相容）  
-        const cookieString2 = `auth-token-backup=${token}; HttpOnly; Secure; Path=/; Max-Age=3600`;
+        // 方法3: 備用設定（部分手機瀏覽器相容）-  
+        const cookieString2 = `auth-token-backup=${token}; HttpOnly; Secure; Path=/; Max-Age=3600; SameSite=None`;
         
         // 設定多個Cookie header
         res.setHeader('Set-Cookie', [cookieString1, cookieString2]);
@@ -487,8 +487,8 @@ module.exports = class Member {
         
         // 2. 手動設定過期的 Set-Cookie header（立即過期）
         const expiredCookies = [
-          'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
-          'auth-token-backup=; HttpOnly; Secure; Path=/; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT'
+          'auth-token=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None',
+          'auth-token-backup=; HttpOnly; Secure; Path=/; Max-Age=0; SameSite=None'
         ];
         res.setHeader('Set-Cookie', expiredCookies);
         
