@@ -125,7 +125,7 @@ export default {
       const file = event.target.files[0];
       
       if (file) {
-        // 🔥 檢查檔案大小（建議不超過2MB原始檔案）
+        // 檢查檔案大小
         const maxSize = 2 * 1024 * 1024; // 2MB
         if (file.size > maxSize) {
           alert(`圖片檔案太大！請選擇小於 ${Math.round(maxSize/1024/1024)}MB 的圖片。`);

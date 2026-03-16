@@ -390,17 +390,7 @@ module.exports = class Member {
           },
         });
       }
-      /*
-      // 1.先取得會員目前的頭像資訊，準備刪除舊檔案
-      const prisma = require("../../models/prisma_client");
-      const currentMember = await prisma.member.findUnique({
-        where: { id: parseInt(memberId) }
-      });
       
-      // 2.準備新檔案資訊
-      const avatarPath = `/uploads/avatars/${req.file.filename}`;
-      const uniqueFileName = req.file.filename; // 系統生成的唯一檔名
-      */
       // 🔥 新方法：將圖片轉為 Base64 儲存到資料庫
       const imageBuffer = req.file.buffer;
       const mimeType = req.file.mimetype;

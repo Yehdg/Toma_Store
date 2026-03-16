@@ -1,14 +1,15 @@
 # 電商網站 (Toma Store)
 
 ##  專案簡介
-這是一個全端 Web 應用程式，採用MVC架構，提供完整的線上購物平台。用戶可以瀏覽商品、加入購物車並進行下訂單，會員系統支援註冊登入、個人資料管理、頭貼上傳，以及購買歷史紀錄的查詢功能。
+這是一個全端 Web 應用程式，採用MVC架構，提供簡單的線上購物網站。
+用戶可以瀏覽商品、加入購物車並進行下訂單，會員系統支援註冊登入、個人資料管理、頭貼上傳，以及購買歷史紀錄的查詢功能。
 
-**部署架構:**
-- **前端**: GitHub Pages 
-- **後端**: Railway 
-- **資料庫**: Railway (MySQL) 
+**部署架構：**
+- **前端：** GitHub Pages 
+- **後端：** Railway 
+- **資料庫：** Railway (MySQL) 
 
-🌐 **Demo 展示**：[Toma Store 電商平台](https://yehdg.github.io/Toma_Store/)  
+🌐 **Demo 展示**：[Toma Store 電商網站](https://yehdg.github.io/Toma_Store/)  
 
 (不想註冊)想直接登入的話：  
 ◇信箱：test@gmail.com   
@@ -16,28 +17,28 @@
 
 ##  專案技術
 **前端：**
-- Vue 2
+- **Vue 2**
 - Vue Router
 - Axios
 
 **後端：**
-- Node.js
+- **Node.js**
 - Express.js
 - Prisma ORM
 - MySQL2
 - dotenv
 - cors
 
-**會員系統:**
+會員系統：  
 - JWT (JSON Web Token)
 - bcryptjs
 - cookie-parser
 - Joi
 
-**檔案處理:**
+檔案處理：  
 - Multer
 
-**資料庫：**
+資料庫：  
 - MySQL
 
 
@@ -63,9 +64,9 @@
 - **CORS 跨域防護**：安全的跨域資源共享
 
 ###  檔案處理
-- **檔案上傳**：Multer 中間件處理頭貼上傳
-- **靜態資源**：Express 靜態檔案服務
-- **圖片管理**：自動檔案命名與路徑管理
+- **檔案上傳**：Multer 記憶體儲存處理頭貼上傳
+- **圖片編碼**：Base64 格式轉換與資料庫儲存
+- **檔案驗證**：支援 JPEG、PNG、GIF 格式，限制 2MB
 
 ###  用戶體驗
 - **響應式設計**：支援各種裝置瀏覽
