@@ -430,9 +430,9 @@ module.exports = class Member {
   async getVerify(req, res, next) {
     try {
       // 混合身份驗證：優先Cookie，後備Authorization header（支援無痕模式）
-      let token = req.cookies['auth-token'] || 
-                  req.cookies['auth-token-backup'] || 
-                  req.get('Authorization')?.replace('Bearer ', '');
+      const token = req.cookies['auth-token'] || 
+                    req.cookies['auth-token-backup'] || 
+                    req.get('Authorization')?.replace('Bearer ', '');
       
       if (!token) {
         return res.json({
